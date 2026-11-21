@@ -47,25 +47,38 @@ def read_data():
 #          y = N-vector for y position
 #          z = N-vector for z position
 # Step 1a
+# I am trying to mimic exactly (if possible) the plot given in the Lab3 Step 1 page
 def plot_position(t, x, y, z):
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 6))
     fig.suptitle("Position vs Time", fontweight='bold')
     
+    x_ticks = np.arange(0, 0.9, 0.1)
+    x_labels = ['0'] + [f'{val:.1f}' for val in x_ticks[1:]]
+    
+    for ax in (ax1, ax2, ax3):
+        ax.set_xlim(0, 0.8)
+        ax.set_xticks(x_ticks)
+        ax.set_xticklabels(x_labels)
+        ax.grid(True)
+        
     ax1.plot(t, x, 'r')
     ax1.set_ylabel("X (m)")
-    ax1.set_xlim(0, 0.8)
-    ax1.grid(True)
+    ax1.set_yticks([-1, -0.5, 0, 0.5])
+    ax1.set_yticklabels(['-1', '-0.5', '0', '0.5'])
+    ax1.set_ylim(-1, 0.6)
     
     ax2.plot(t, y, 'g')
     ax2.set_ylabel("Y (m)")
-    ax2.set_xlim(0, 0.8)
-    ax2.grid(True)
+    ax2.set_yticks([-4, -3.5, -3, -2.5])
+    ax2.set_yticklabels(['-4', '-3.5', '-3', '-2.5'])
+    ax2.set_ylim(-4, -2.4)
     
     ax3.plot(t, z, 'b')
     ax3.set_ylabel("Z (m)")
     ax3.set_xlabel("time (s)")
-    ax3.set_xlim(0, 0.8)
-    ax3.grid(True)
+    ax3.set_yticks(np.arange(3.60, 3.67, 0.02))
+    ax3.yaxis.set_major_formatter('{x:.2f}')
+    ax3.set_ylim(3.59, 3.67)
     
     plt.tight_layout()
     plt.show()
