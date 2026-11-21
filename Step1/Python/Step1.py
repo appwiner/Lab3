@@ -48,18 +48,25 @@ def read_data():
 #          z = N-vector for z position
 # Step 1a
 def plot_position(t, x, y, z):
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(8, 6))
-    fig.suptitle("Position vs Time")
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 6))
+    fig.suptitle("Position vs Time", fontweight='bold')
+    
     ax1.plot(t, x, 'r')
     ax1.set_ylabel("X (m)")
+    ax1.set_xlim(0, 0.8)
     ax1.grid(True)
+    
     ax2.plot(t, y, 'g')
     ax2.set_ylabel("Y (m)")
+    ax2.set_xlim(0, 0.8)
     ax2.grid(True)
+    
     ax3.plot(t, z, 'b')
     ax3.set_ylabel("Z (m)")
     ax3.set_xlabel("time (s)")
+    ax3.set_xlim(0, 0.8)
     ax3.grid(True)
+    
     plt.tight_layout()
     plt.show()
     
