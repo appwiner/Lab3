@@ -90,8 +90,39 @@ def plot_position(t, x, y, z):
 #          vz = N-vector for z velocity
 # Step 1b
 def plot_velocity(t, vx, vy, vz):
-    # TODO: create a figure with three subplots
-    pass
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 6))
+    fig.suptitle("Velocity vs Time", fontweight='bold')
+    
+    x_ticks = np.arange(0, 0.9, 0.1)
+    x_labels = ['0'] + [f'{val:.1f}' for val in x_ticks[1:]]
+    
+    for ax in (ax1, ax2, ax3):
+        ax.set_xlim(0, 0.8)
+        ax.set_xticks(x_ticks)
+        ax.set_xticklabels(x_labels)
+        ax.grid(True)
+        
+    ax1.plot(t, vx)
+    ax1.set_ylabel(r"$v_x$ (m/s)")
+    ax1.set_yticks([-3, -2, -1])
+    ax1.set_yticklabels(['-3', '-2', '-1'])
+    ax1.set_ylim(-3, -0.8)
+    
+    ax2.plot(t, vy)
+    ax2.set_ylabel(r"$v_y$ (m/s)")
+    ax2.set_yticks([1, 1.5, 2])
+    ax2.set_yticklabels(['1', '1.5', '2'])
+    ax2.set_ylim(0.7, 2.4)
+    
+    ax3.plot(t, vz)
+    ax3.set_ylabel(r"$v_z$ (m/s)")
+    ax3.set_xlabel("time (s)")
+    ax3.set_yticks([-0.4, -0.2, 0, 0.2])
+    ax3.set_yticklabels(['-0.4', '-0.2', '0', '0.2'])
+    ax3.set_ylim(-0.4, 0.2)
+    
+    plt.tight_layout()
+    plt.show()
     
 # Plots the angle-axis representation of the orientation vs time
 # input:   t = N-vector for time
@@ -127,19 +158,16 @@ def plot_error_metric(t, error):
 # returns:  vx, vy, vz (all N vectors)
 # step 1b
 def calculate_velocity(t, x, y, z):
-    pass
-    # TODO: calculate the velocity using difference equation
-    # Hint: np.diff()
-    # v(i) = (x(i+1) - x(i))/(t(i+1) - t(i))
-    # vx = ...
-    # vy = ...
-    # vz = ...
+    dt = np.diff(t)
+    vx = np.diff(x) / dt
+    vy = np.diff(y) / dt
+    vz = np.diff(z) / dt
 
     # append the last value to make the vectors the same length
-    # vx = np.append(vx, vx[-1])
-    # vy = np.append(vy, vy[-1])
-    # vz = np.append(vz, vz[-1])
-    #return vx, vy, vz
+    vx = np.append(vx, vx[-1])
+    vy = np.append(vy, vy[-1])
+    vz = np.append(vz, vz[-1])
+    return vx, vy, vz
     
 # Convert a 3-vector to a 3x3 skew symmetric matrix (hat operator)
 # input:  v = any 3-vector
@@ -292,8 +320,8 @@ def main():
     plot_position(t, x, y, z) # uncomment when you are ready
     
     # (b) calculate velocity
-    # vx, vy, vz = calculate_velocity(t, x, y, z) # uncomment when you are ready
-    # plot_velocity(t, vx, vy, vz) # uncomment when you are ready
+    vx, vy, vz = calculate_velocity(t, x, y, z)
+    plot_velocity(t, vx, vy, vz)
     
     # calculate all of the rotation matrices
     # (this is done for you :)
