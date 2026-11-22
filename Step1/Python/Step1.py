@@ -176,8 +176,40 @@ def plot_angle_axes(t, thetas, omega_axes_1, omega_axes_2, omega_axes_3):
 # Step 1d
 def plot_body_angular_velocity(t, omega_body):
     omega_1, omega_2, omega_3 = omega_body[0,:], omega_body[1,:], omega_body[2,:]
-    # TODO: create a figure with three subplots
-    pass
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
+    
+    ax1.set_title("Angular Velocity vs Time", fontweight="bold")
+    
+    ax1.plot(t, omega_1)
+    ax1.set_ylabel(r"$\omega^b_1$ (rad/s)")
+    ax1.grid(True)
+    ax1.set_yticks([-4, -2, 0, 2])
+    ax1.set_yticklabels(['-4', '-2', '0', '2'])
+    ax1.set_ylim(-6, 2.2)
+    
+    ax2.plot(t, omega_2)
+    ax2.set_ylabel(r"$\omega^b_2$ (rad/s)")
+    ax2.grid(True)
+    ax2.set_yticks([0, 2, 4])
+    ax2.set_yticklabels(['0', '2', '4'])
+    ax2.set_ylim(-1.5, 4.8)
+    
+    ax3.plot(t, omega_3)
+    ax3.set_ylabel(r"$\omega^b_3$ (rad/s)")
+    ax3.grid(True)
+    ax3.set_yticks([-2, 0, 2])
+    ax3.set_yticklabels(['-2', '0', '2'])
+    ax3.set_ylim(-2.6, 2.5)
+    
+    x_ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+    x_tick_labels = ['0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8']
+    ax3.set_xticks(x_ticks)
+    ax3.set_xticklabels(x_tick_labels)
+    ax3.set_xlim(0, 0.8)
+    ax3.set_xlabel("time (s)")
+    
+    plt.tight_layout()
+    plt.show()
     
 # Plots the error metric vs time
 # input:   t = N-vector for time
@@ -324,12 +356,15 @@ def calculate_angle_axes(Rs):
 # returns:  omega_body = 3xN angular velocity vector in the body frame
 # Step 1d
 def calculate_body_angular_velocity(t, Rs):
-    # TODO: complete the implementation
-    N = np.size(Rs,2)
-    # reminder: R(ti)^T = Rs[:,:,i].T
-    # reminder: R(ti+1) = Rs[:,:,i+1]
-    # reminder: matrix multiplication is denoted with @
-    pass
+    N = np.size(Rs, 2)
+    omega_body = np.zeros((3, N))
+    for i in range(N - 1):
+        R_rel = Rs[:, :, i].T @ Rs[:, :, i + 1]
+        w_hat_theta = MatrixLog3(R_rel)
+        w_theta = so3ToVec(w_hat_theta)
+        dt = t[i + 1] - t[i]
+        omega_body[:, i] = w_theta / dt
+    omega_body[:, -1] = omega_body[:, -2]
     return omega_body
     
 
@@ -368,8 +403,8 @@ def main():
     plot_angle_axes(t, thetas, omega_axes_1, omega_axes_2, omega_axes_3)
     
     # (d) calculate the angular velocity in the body frame
-    # omega_body = calculate_body_angular_velocity(t, Rs) # uncomment when you are ready
-    # plot_body_angular_velocity(t, omega_body) # uncomment when you are ready
+    omega_body = calculate_body_angular_velocity(t, Rs) # uncomment when you are ready
+    plot_body_angular_velocity(t, omega_body) # uncomment when you are ready
     
     # (e) calculate the error metric
     # We set Rd = the last rotation matrix in R
