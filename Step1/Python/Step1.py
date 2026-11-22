@@ -216,8 +216,25 @@ def plot_body_angular_velocity(t, omega_body):
 #          error = N-vector to plot
 # Step 1e
 def plot_error_metric(t, error):
-    # TODO: create a figure with one plot
-    pass
+    fig, ax = plt.subplots()
+    ax.plot(t, error)
+    ax.set_title("Squared Distance to Target Orientation", fontweight="bold")
+    ax.set_ylabel(r"$d^2$")
+    ax.set_xlabel("time (s)")
+    ax.grid(True)
+    
+    ax.set_yticks([0, 0.5, 1, 1.5, 2, 2.5])
+    ax.set_yticklabels(['0', '0.5', '1', '1.5', '2', '2.5'])
+    ax.set_ylim(0, 2.5)
+    
+    x_ticks = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
+    x_tick_labels = ['0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8']
+    ax.set_xticks(x_ticks)
+    ax.set_xticklabels(x_tick_labels)
+    ax.set_xlim(0, 0.8)
+    
+    plt.tight_layout()
+    plt.show()
 
 
 ################## CALCULATIONS ##################
@@ -374,8 +391,12 @@ def calculate_body_angular_velocity(t, Rs):
 # returns:  error = N-vector
 # Step 1e
 def calculate_error(Rs, Rds):
-    # TODO: complete the implementation
-    pass
+    N = np.size(Rs, 2)
+    error = np.zeros(N)
+    for i in range(N):
+        R = Rs[:, :, i]
+        Rd = Rds[:, :, i]
+        error[i] = 2.0 * np.trace(np.eye(3) - R.T @ Rd)
     return error
     
 
@@ -413,8 +434,8 @@ def main():
     for i in range(np.size(Rs,2)):
         Rds[:,:,i] = Rs[:,:,-1]
 
-    # error = calculate_error(Rs, Rds) # uncomment when you are ready
-    # plot_error_metric(t, error) # uncomment when you are ready
+    error = calculate_error(Rs, Rds) # uncomment when you are ready
+    plot_error_metric(t, error) # uncomment when you are ready
     
 
 if __name__ == "__main__":
